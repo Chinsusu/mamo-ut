@@ -1,17 +1,9 @@
 version: 2
 
+# Composer and npm are intentionally enabled only after their manifests exist.
+# Configuring an ecosystem without its manifest makes every Dependabot run fail.
 updates:
   - package-ecosystem: github-actions
-    directory: /
-    schedule:
-      interval: weekly
-
-  - package-ecosystem: composer
-    directory: /
-    schedule:
-      interval: weekly
-
-  - package-ecosystem: npm
     directory: /
     schedule:
       interval: weekly
