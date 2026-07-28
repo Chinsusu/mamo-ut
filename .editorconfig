@@ -1,0 +1,45 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+[*.php]
+indent_size = 4
+
+[*.blade.php]
+indent_size = 4
+
+[*.{js,jsx,mjs,cjs,ts,tsx,css,scss,vue,json}]
+indent_size = 2
+
+[composer.json]
+indent_size = 4
+
+[*.{yml,yaml}]
+indent_size = 2
+
+[*.xml]
+indent_size = 4
+
+[*.{sh,bash,zsh}]
+indent_size = 4
+
+[*.sql]
+indent_size = 2
+
+[*.{md,mdx}]
+trim_trailing_whitespace = false
+max_line_length = off
+
+[Makefile]
+indent_style = tab
+
+[*.lock]
+insert_final_newline = unset
+trim_trailing_whitespace = unset

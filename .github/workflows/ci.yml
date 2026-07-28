@@ -1,0 +1,176 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  repository:
+    name: repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      backend: ${{ steps.manifests.outputs.backend }}
+      frontend: ${{ steps.manifests.outputs.frontend }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Detect application manifests
+        id: manifests
+        shell: bash
+        run: |
+          if [[ -f composer.json ]]; then
+            echo "backend=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "backend=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          if [[ -f package.json ]]; then
+            echo "frontend=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "frontend=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check repository
+        run: bash scripts/ci.sh repository
+
+      - name: Validate pull request title
+        if: github.event_name == 'pull_request'
+        shell: bash
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          set -Eeuo pipefail
+          pattern='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9][a-z0-9._/-]*\))?!?: .+'
+          if [[ ! "$PR_TITLE" =~ $pattern ]]; then
+            echo "::error::PR title must follow Conventional Commits."
+            exit 1
+          fi
+
+  backend:
+    name: backend
+    needs: repository
+    if: needs.repository.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: mamo_ut_testing
+          MYSQL_ROOT_PASSWORD: root_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --host=127.0.0.1 --user=root --password=root_password"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    env:
+      APP_ENV: testing
+      APP_DEBUG: "false"
+      APP_KEY: base64:MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA=
+      APP_URL: http://127.0.0.1
+      BCRYPT_ROUNDS: "4"
+      CACHE_STORE: array
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: "3306"
+      DB_DATABASE: mamo_ut_testing
+      DB_USERNAME: root
+      DB_PASSWORD: root_password
+      LOG_CHANNEL: stderr
+      MAIL_MAILER: array
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: array
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: bcmath, ctype, curl, dom, fileinfo, gd, intl, mbstring, pdo_mysql, tokenizer, xml
+          coverage: none
+          tools: composer:v2
+        env:
+          fail-fast: "true"
+
+      - name: Check backend
+        run: bash scripts/ci.sh backend
+
+  frontend:
+    name: frontend
+    needs: repository
+    if: needs.repository.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CI: "true"
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Check frontend
+        run: bash scripts/ci.sh frontend
+
+  gate:
+    name: gate
+    if: always()
+    needs:
+      - repository
+      - backend
+      - frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      REPOSITORY_RESULT: ${{ needs.repository.result }}
+      BACKEND_REQUIRED: ${{ needs.repository.outputs.backend }}
+      BACKEND_RESULT: ${{ needs.backend.result }}
+      FRONTEND_REQUIRED: ${{ needs.repository.outputs.frontend }}
+      FRONTEND_RESULT: ${{ needs.frontend.result }}
+    steps:
+      - name: Enforce required CI results
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          if [[ "$REPOSITORY_RESULT" != "success" ]]; then
+            echo "::error::The repository job did not succeed ($REPOSITORY_RESULT)."
+            exit 1
+          fi
+
+          if [[ "$BACKEND_REQUIRED" == "true" && "$BACKEND_RESULT" != "success" ]]; then
+            echo "::error::composer.json exists, but the backend job did not succeed ($BACKEND_RESULT)."
+            exit 1
+          fi
+
+          if [[ "$FRONTEND_REQUIRED" == "true" && "$FRONTEND_RESULT" != "success" ]]; then
+            echo "::error::package.json exists, but the frontend job did not succeed ($FRONTEND_RESULT)."
+            exit 1
+          fi
+
+          echo "All checks required for this repository state succeeded."

@@ -1,0 +1,101 @@
+name: Deploy development
+
+on:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+
+concurrency:
+  group: deploy-development
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    name: preflight
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'master' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      deployable: ${{ steps.inspect.outputs.deployable }}
+    steps:
+      - name: Check out the current master tip
+        uses: actions/checkout@v7
+        with:
+          ref: master
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Check application readiness and revision freshness
+        id: inspect
+        shell: bash
+        env:
+          TESTED_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -Eeuo pipefail
+
+          current_sha="$(git rev-parse HEAD)"
+          if [[ "$current_sha" != "$TESTED_SHA" ]]; then
+            echo "deployable=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping stale CI revision $TESTED_SHA; current master is $current_sha."
+            exit 0
+          fi
+
+          required_files=(composer.json composer.lock package.json package-lock.json artisan)
+          for required_file in "${required_files[@]}"; do
+            if [[ ! -f "$required_file" ]]; then
+              echo "deployable=false" >> "$GITHUB_OUTPUT"
+              echo "::notice::Skipping deployment because $required_file is not present yet."
+              exit 0
+            fi
+          done
+
+          echo "deployable=true" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    name: deploy
+    needs: preflight
+    if: needs.preflight.outputs.deployable == 'true'
+    runs-on:
+      - self-hosted
+      - linux
+      - x64
+      - mamo-ut-dev
+    timeout-minutes: 30
+    environment:
+      name: development
+      url: ${{ vars.DEV_PUBLIC_URL }}
+    env:
+      APP_ROOT: ${{ vars.DEV_APP_ROOT }}
+      DEPLOY_SHA: ${{ github.event.workflow_run.head_sha }}
+      HEALTHCHECK_URL: ${{ vars.DEV_HEALTHCHECK_URL }}
+      KEEP_RELEASES: ${{ vars.DEV_KEEP_RELEASES }}
+      RELOAD_SERVICES: ${{ vars.DEV_RELOAD_SERVICES }}
+    steps:
+      - name: Check out the tested master commit
+        uses: actions/checkout@v7
+        with:
+          ref: master
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify deployment revision
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          actual_sha="$(git rev-parse HEAD)"
+          if [[ "$actual_sha" != "$DEPLOY_SHA" ]]; then
+            echo "::error::Refusing stale deployment: current master is $actual_sha, but CI tested $DEPLOY_SHA."
+            exit 1
+          fi
+
+      - name: Deploy development atomically
+        run: bash scripts/deploy-dev.sh deploy
