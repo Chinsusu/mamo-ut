@@ -90,5 +90,9 @@ cậy và chỉ nhận deployment sau khi CI trên `master` đã thành công.
 - Bật private vulnerability reporting.
 - Chỉ cấp quyền Actions mặc định `contents: read`; workflow nào cần thêm quyền
   phải khai báo tại chính workflow đó.
+- Repo bootstrap chỉ bật Dependabot cho `github-actions`. Trong cùng PR đầu
+  tiên thêm `composer.json` và `package.json`, bổ sung lại hai ecosystem
+  `composer` và `npm` vào `.github/dependabot.yml`; cấu hình ecosystem khi chưa
+  có manifest sẽ tạo update job lỗi.
 - Với action bên thứ ba, dùng release channel được nhà cung cấp hỗ trợ và bật
   Dependabot; ưu tiên commit SHA khi có quy trình cập nhật tự động phù hợp.
