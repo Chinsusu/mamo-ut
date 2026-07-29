@@ -135,8 +135,9 @@ root /var/www/mamo-ut/current/public;
 ```
 
 Health endpoint phải trả HTTP 2xx khi ứng dụng sẵn sàng. Có thể dùng URL chỉ
-truy cập nội bộ như `http://127.0.0.1/health`; nếu virtual host yêu cầu hostname,
-dùng URL development thực tế. Không để health endpoint trả secret hoặc dữ liệu
+truy cập nội bộ như `http://127.0.0.1/up`; nếu virtual host yêu cầu hostname,
+dùng URL development thực tế. `/health` được giữ làm alias tương thích cho
+công cụ cũ nhưng pipeline và tài liệu mới phải dùng `/up`. Không để health endpoint trả secret hoặc dữ liệu
 nhạy cảm.
 
 Worker Supervisor cần chạy dưới user không đặc quyền, dùng đường dẫn
@@ -175,7 +176,7 @@ Tạo Environment variables:
 | Variable | Ví dụ | Bắt buộc |
 |---|---|---|
 | `DEV_APP_ROOT` | `/var/www/mamo-ut` | Có |
-| `DEV_HEALTHCHECK_URL` | `http://127.0.0.1/health` | Có |
+| `DEV_HEALTHCHECK_URL` | `http://127.0.0.1/up` | Có |
 | `DEV_PUBLIC_URL` | `https://dev.example.internal` | Không |
 | `DEV_KEEP_RELEASES` | `5` | Có |
 | `DEV_RELOAD_SERVICES` | `false` | Có |
@@ -236,7 +237,7 @@ gần nhất:
 ```bash
 sudo -u deploy env \
   APP_ROOT=/var/www/mamo-ut \
-  HEALTHCHECK_URL=http://127.0.0.1/health \
+  HEALTHCHECK_URL=http://127.0.0.1/up \
   RELOAD_SERVICES=false \
   bash /var/www/mamo-ut/current/scripts/deploy-dev.sh rollback
 ```
@@ -246,7 +247,7 @@ Hoặc chỉ định release:
 ```bash
 sudo -u deploy env \
   APP_ROOT=/var/www/mamo-ut \
-  HEALTHCHECK_URL=http://127.0.0.1/health \
+  HEALTHCHECK_URL=http://127.0.0.1/up \
   RELOAD_SERVICES=false \
   bash /var/www/mamo-ut/current/scripts/deploy-dev.sh rollback \
   20260728153000-012345abcdef

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sản phẩm – O Út Admin</title>
+<meta name="description" content="Quản lý sản phẩm và tồn kho.">
+<meta name="theme-color" content="#5B1F2E">
+<meta property="og:title" content="Sản phẩm – O Út Admin">
+<meta property="og:description" content="Quản lý sản phẩm và tồn kho.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="../assets/images/hero-ouut.jpg">
+<link rel="icon" href="../assets/images/logo-mark.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/storefront.css"><link rel="stylesheet" href="../assets/css/admin.css">
+
+</head>
+<body class="admin-body" data-root="../" data-admin-page="products">
+<div class="admin-shell">
+  <div data-admin-sidebar-slot></div>
+  <main class="admin-main">
+    <div data-admin-topbar-slot></div>
+    <div class="admin-content"><div class="admin-page-header"><div><h1>Sản phẩm</h1><p>Quản lý món, biến thể, giá, tồn, ảnh và trạng thái hiển thị.</p></div><div class="admin-actions"><a class="btn btn--primary" href="product-form.html"><svg class="icon"><use href="../assets/icons/icons.svg#plus"></use></svg> Thêm sản phẩm</a></div></div><div class="admin-card"><div class="admin-toolbar"><div class="admin-filters" data-admin-product-filters><button class="admin-filter is-active" data-product-status="all">Tất cả</button><button class="admin-filter" data-product-status="active">Đang bán</button><button class="admin-filter" data-product-status="hidden">Đã ẩn</button><button class="admin-filter" data-product-status="low">Tồn thấp</button></div><div class="admin-toolbar__right"><input class="admin-input" data-admin-product-search placeholder="Tìm tên sản phẩm..."></div></div><div class="admin-card__body--flush admin-table-wrap"><table class="admin-table"><thead><tr><th></th><th>Sản phẩm</th><th>Danh mục</th><th>Biến thể</th><th>Giá từ</th><th>Tồn</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody data-admin-products-table></tbody></table></div></div></div>
+  </main>
+</div>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/components.js"></script>
+<script src="../assets/js/admin.js"></script>
+</body></html>

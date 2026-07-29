@@ -61,7 +61,7 @@ Variables:
 | --- | --- |
 | `DEV_APP_ROOT` | `/var/www/mamo-ut` |
 | `DEV_PUBLIC_URL` | URL để GitHub hiển thị cho môi trường dev |
-| `DEV_HEALTHCHECK_URL` | URL health check của môi trường dev |
+| `DEV_HEALTHCHECK_URL` | URL `/up` của môi trường dev |
 | `DEV_KEEP_RELEASES` | `5` |
 | `DEV_RELOAD_SERVICES` | `false` trừ khi đã cấp sudo tối thiểu |
 

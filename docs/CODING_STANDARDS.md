@@ -283,7 +283,8 @@ Tên phải phản ánh ngôn ngữ nghiệp vụ. Tránh tên chung chung như 
 
 - Mọi thời điểm lưu trong DB và xử lý nội bộ MUST ở UTC.
 - Cấu hình PHP/Laravel, worker, scheduler, MySQL connection và server phải nhất quán UTC.
-- Chuyển sang múi giờ người dùng (`Asia/Ho_Chi_Minh` khi phù hợp) chỉ ở ranh giới hiển thị/nhập liệu.
+- `APP_TIMEZONE` MUST là `UTC`; `APP_DISPLAY_TIMEZONE` mặc định là `Asia/Ho_Chi_Minh`.
+- Chỉ chuyển sang múi giờ hiển thị ở ranh giới nhập/xuất; không đổi timezone mặc định của model hoặc database.
 - Field thời điểm có hậu tố `_at`; ngày không có thời gian dùng `_date`.
 - Dùng clock/fake time trong test; không để test phụ thuộc giờ hệ thống thực.
 - Không so sánh ngày/giờ bằng chuỗi đã format.

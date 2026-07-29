@@ -1,0 +1,1 @@
+<x-layouts.storefront title="Giỏ hàng – O Út" page="cart"><section class="page-hero"><div class="container"><span class="eyebrow">Đơn hàng của bạn</span><h1>Giỏ hàng</h1><p>Kiểm tra đúng món, khối lượng và số lượng trước khi đặt hàng.</p></div></section><livewire:storefront.cart /></x-layouts.storefront>

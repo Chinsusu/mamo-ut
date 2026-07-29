@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cấu hình cửa hàng – O Út Admin</title>
+<meta name="description" content="Cấu hình liên hệ, giao hàng và thanh toán.">
+<meta name="theme-color" content="#5B1F2E">
+<meta property="og:title" content="Cấu hình cửa hàng – O Út Admin">
+<meta property="og:description" content="Cấu hình liên hệ, giao hàng và thanh toán.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="../assets/images/hero-ouut.jpg">
+<link rel="icon" href="../assets/images/logo-mark.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/storefront.css"><link rel="stylesheet" href="../assets/css/admin.css">
+
+</head>
+<body class="admin-body" data-root="../" data-admin-page="settings">
+<div class="admin-shell">
+  <div data-admin-sidebar-slot></div>
+  <main class="admin-main">
+    <div data-admin-topbar-slot></div>
+    <div class="admin-content"><div class="admin-page-header"><div><h1>Cấu hình cửa hàng</h1><p>Nhóm theo Store, Shipping, Payment và Contact.</p></div></div><form data-settings-form><div class="admin-form-layout"><div><div class="admin-form-card"><div class="admin-form-card__header"><h2>Thông tin cửa hàng</h2></div><div class="admin-form-card__body"><div class="admin-form-grid"><div class="admin-field"><label>Tên cửa hàng</label><input class="admin-control" name="storeName"></div><div class="admin-field"><label>Hotline</label><input class="admin-control" name="hotline"></div><div class="admin-field"><label>Email</label><input class="admin-control" name="email"></div><div class="admin-field admin-field--full"><label>Địa chỉ</label><input class="admin-control" name="address"></div></div></div></div><div class="admin-form-card"><div class="admin-form-card__header"><h2>Giao hàng</h2></div><div class="admin-form-card__body"><div class="admin-form-grid"><div class="admin-field"><label>Phí giao tiêu chuẩn</label><input class="admin-control" name="shippingStandard" type="number"></div><div class="admin-field"><label>Phí giao nhanh</label><input class="admin-control" name="shippingExpress" type="number"></div><div class="admin-field"><label>Ngưỡng miễn phí giao</label><input class="admin-control" name="freeShippingThreshold" type="number"></div></div></div></div><div class="admin-form-card"><div class="admin-form-card__header"><h2>Thanh toán chuyển khoản</h2></div><div class="admin-form-card__body"><div class="admin-form-grid"><div class="admin-field"><label>Ngân hàng</label><input class="admin-control" name="bankName"></div><div class="admin-field"><label>Số tài khoản</label><input class="admin-control" name="bankAccount"></div><div class="admin-field admin-field--full"><label>Chủ tài khoản</label><input class="admin-control" name="bankOwner"></div></div></div></div></div><aside><div class="admin-form-card"><div class="admin-form-card__header"><h2>Mạng xã hội</h2></div><div class="admin-form-card__body"><div class="admin-field"><label>Facebook</label><input class="admin-control" name="facebook"></div><div class="admin-field" style="margin-top:12px"><label>Instagram</label><input class="admin-control" name="instagram"></div><div class="admin-field" style="margin-top:12px"><label>Zalo</label><input class="admin-control" name="zalo"></div></div></div><div class="admin-form-card"><div class="admin-form-card__body"><p class="small muted">Các trường này là nguồn dữ liệu cho header, footer, checkout và trang liên hệ trong backend thật.</p></div></div></aside></div><div class="sticky-actions"><span class="small muted">Không autosave để tránh thay đổi nhầm cấu hình quan trọng.</span><button class="btn btn--primary" type="submit"><svg class="icon"><use href="../assets/icons/icons.svg#save"></use></svg> Lưu cấu hình</button></div></form></div>
+  </main>
+</div>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/components.js"></script>
+<script src="../assets/js/admin.js"></script>
+</body></html>

@@ -1,0 +1,145 @@
+{
+  "checks": [
+    {
+      "name": "Trang chủ render",
+      "passed": true,
+      "detail": "Gửi trọn hương vị Huế vào bữa cơm nhà"
+    },
+    {
+      "name": "5 sản phẩm nổi bật",
+      "passed": true,
+      "detail": "5"
+    },
+    {
+      "name": "Thêm nhanh cập nhật giỏ",
+      "passed": true,
+      "detail": "1"
+    },
+    {
+      "name": "Blog cards có nội dung",
+      "passed": true,
+      "detail": "3"
+    },
+    {
+      "name": "Chọn biến thể 500g",
+      "passed": true,
+      "detail": "OUT-TC-500"
+    },
+    {
+      "name": "Giỏ cộng đúng số lượng",
+      "passed": true,
+      "detail": "3"
+    },
+    {
+      "name": "Giỏ có 2 dòng sản phẩm",
+      "passed": true,
+      "detail": "2"
+    },
+    {
+      "name": "Mã OUUT10 hoạt động",
+      "passed": true,
+      "detail": "−30.000 ₫"
+    },
+    {
+      "name": "Checkout báo lỗi bắt buộc",
+      "passed": true,
+      "detail": "Kiểm tra lại 6 mục:\nNhập họ tên người nhận.\nSố điện thoại chưa đúng. Kiểm tra lại giúp O Út.\nChọn tỉnh/thành.\nNhập quận/huyện.\nNhập phường/xã.\nNhập địa chỉ giao hàng chi tiết."
+    },
+    {
+      "name": "Hiện hướng dẫn chuyển khoản",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Tạo mã đơn thành công",
+      "passed": true,
+      "detail": "OU-260729-2DDP"
+    },
+    {
+      "name": "Hiện QR khi chuyển khoản",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Tra cứu tự hiển thị đúng đơn",
+      "passed": true,
+      "detail": "Đơn OU-260729-2DDP\n\nĐặt lúc 05:08 29/7/26\n\nO Út đã nhận đơn\n05:08 29/7/26\nĐã xác nhận\nO Út kiểm tra sản phẩm và thông ti"
+    },
+    {
+      "name": "Admin login demo",
+      "passed": true,
+      "detail": "Chào buổi sáng, O Út"
+    },
+    {
+      "name": "Dashboard có KPI",
+      "passed": true,
+      "detail": "4"
+    },
+    {
+      "name": "Admin ẩn/hiện sản phẩm",
+      "passed": true,
+      "detail": "Đã ẩn"
+    },
+    {
+      "name": "Form sản phẩm nạp dữ liệu",
+      "passed": true,
+      "detail": "Tôm chua Huế O Út"
+    },
+    {
+      "name": "Lưu sản phẩm demo",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Có đơn mới cho admin",
+      "passed": true,
+      "detail": "5"
+    },
+    {
+      "name": "Có action xác nhận đơn",
+      "passed": true,
+      "detail": "1"
+    },
+    {
+      "name": "Cập nhật timeline đơn",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Lưu bài viết demo",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Lưu cấu hình demo",
+      "passed": true,
+      "detail": "0909 123 456"
+    },
+    {
+      "name": "Menu mobile mở",
+      "passed": true,
+      "detail": "false"
+    },
+    {
+      "name": "Thanh mua nhanh mobile hiện",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "errors": [],
+  "console": [],
+  "screenshots": [
+    "qa-home-desktop.png",
+    "qa-product-desktop.png",
+    "qa-cart-desktop.png",
+    "qa-order-success.png",
+    "qa-order-tracking.png",
+    "qa-admin-dashboard.png",
+    "qa-admin-products.png",
+    "qa-admin-order-detail.png",
+    "qa-admin-settings.png",
+    "qa-home-mobile.png",
+    "qa-product-mobile.png"
+  ],
+  "passed": true
+}

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Đơn hàng – O Út Admin</title>
+<meta name="description" content="Danh sách và xử lý đơn hàng.">
+<meta name="theme-color" content="#5B1F2E">
+<meta property="og:title" content="Đơn hàng – O Út Admin">
+<meta property="og:description" content="Danh sách và xử lý đơn hàng.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="../assets/images/hero-ouut.jpg">
+<link rel="icon" href="../assets/images/logo-mark.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/storefront.css"><link rel="stylesheet" href="../assets/css/admin.css">
+
+</head>
+<body class="admin-body" data-root="../" data-admin-page="orders">
+<div class="admin-shell">
+  <div data-admin-sidebar-slot></div>
+  <main class="admin-main">
+    <div data-admin-topbar-slot></div>
+    <div class="admin-content"><div class="admin-page-header"><div><h1>Đơn hàng</h1><p>Tìm, lọc và xử lý đơn theo đúng vòng đời.</p></div><div class="admin-actions"><button class="btn btn--secondary" type="button" onclick="window.print()"><svg class="icon"><use href="../assets/icons/icons.svg#printer"></use></svg> In danh sách</button></div></div><div class="admin-card"><div class="admin-toolbar"><div class="admin-filters" data-admin-order-filters><button class="admin-filter is-active" data-order-status="all">Tất cả</button><button class="admin-filter" data-order-status="new">Đơn mới</button><button class="admin-filter" data-order-status="confirmed">Đã xác nhận</button><button class="admin-filter" data-order-status="preparing">Đang chuẩn bị</button><button class="admin-filter" data-order-status="shipping">Đang giao</button><button class="admin-filter" data-order-status="delivered">Đã giao</button><button class="admin-filter" data-order-status="cancelled">Đã hủy</button></div><div class="admin-toolbar__right"><input class="admin-input" data-admin-order-search placeholder="Mã đơn, tên, điện thoại..."></div></div><div class="admin-card__body--flush admin-table-wrap"><table class="admin-table"><thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Sản phẩm</th><th>Tổng</th><th>Thanh toán</th><th>Trạng thái</th><th>Thời gian</th><th></th></tr></thead><tbody data-admin-orders-table></tbody></table></div></div></div>
+  </main>
+</div>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/components.js"></script>
+<script src="../assets/js/admin.js"></script>
+</body></html>

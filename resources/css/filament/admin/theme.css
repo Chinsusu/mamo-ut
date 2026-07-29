@@ -1,0 +1,28 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament';
+@source '../../../../resources/views/filament';
+
+@theme {
+  --color-primary-50: #fbf4f5;
+  --color-primary-100: #f4e2e5;
+  --color-primary-200: #e8c5cb;
+  --color-primary-300: #d698a4;
+  --color-primary-400: #bd6879;
+  --color-primary-500: #9c4055;
+  --color-primary-600: #7c2b40;
+  --color-primary-700: #5b1f2e;
+  --color-primary-800: #421421;
+  --color-primary-900: #34101a;
+  --color-primary-950: #210810;
+}
+
+.fi-body { background: #f7f2ec; }
+.fi-main { background: #f7f2ec; }
+.fi-sidebar { background: #2d2024; }
+.fi-sidebar-header { background: #2d2024; border-color: rgba(255,255,255,.08); }
+.fi-sidebar-nav { background: #2d2024; }
+.fi-sidebar-item a { border-radius: 8px; }
+.fi-sidebar-item-active > a { background: #5b1f2e; color: white; }
+.fi-topbar { background: rgba(255,250,245,.96); border-color: #e8d8c1; }
+.fi-section, .fi-ta-ctn { border-color: #e8d8c1; }

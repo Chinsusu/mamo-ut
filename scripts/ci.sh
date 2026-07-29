@@ -113,7 +113,7 @@ run_backend_checks() {
     fi
 
     vendor/bin/pint --test
-    vendor/bin/phpstan analyse --no-progress
+    vendor/bin/phpstan analyse --memory-limit=1G --no-progress
 
     # This database is disposable and exists only in GitHub Actions. Never run
     # migrate:fresh against an unverified developer database.

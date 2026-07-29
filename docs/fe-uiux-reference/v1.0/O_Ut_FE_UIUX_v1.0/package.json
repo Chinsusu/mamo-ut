@@ -1,0 +1,10 @@
+{
+  "name": "o-ut-fe-uiux-v1",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node tools/server.mjs",
+    "start": "node tools/server.mjs"
+  }
+}

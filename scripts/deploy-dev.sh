@@ -5,6 +5,8 @@ IFS=$'\n\t'
 umask 0027
 
 readonly SOURCE_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly DEPLOY_CONTEXT="${DEPLOY_CONTEXT:-dev}"
+readonly EXPECTED_DEPLOY_MARKER="mamo-ut-${DEPLOY_CONTEXT}"
 readonly APP_ROOT="${APP_ROOT:-/var/www/mamo-ut}"
 readonly RELEASES_DIR="$APP_ROOT/releases"
 readonly SHARED_DIR="$APP_ROOT/shared"
@@ -17,11 +19,11 @@ readonly RELOAD_SERVICES="${RELOAD_SERVICES:-false}"
 readonly ACTION="${1:-deploy}"
 
 log() {
-    printf '[deploy-dev] %s\n' "$*"
+    printf '[deploy-%s] %s\n' "$DEPLOY_CONTEXT" "$*"
 }
 
 fail() {
-    printf '[deploy-dev] ERROR: %s\n' "$*" >&2
+    printf '[deploy-%s] ERROR: %s\n' "$DEPLOY_CONTEXT" "$*" >&2
     exit 1
 }
 
@@ -35,18 +37,20 @@ validate_configuration() {
     local marker_value
 
     require_command realpath
+    [[ "$DEPLOY_CONTEXT" == "dev" || "$DEPLOY_CONTEXT" == "production" ]] \
+        || fail "DEPLOY_CONTEXT must be 'dev' or 'production'."
     [[ "$APP_ROOT" == "/var/www/mamo-ut" ]] \
         || fail "APP_ROOT must be exactly /var/www/mamo-ut for this repository."
     canonical_root="$(realpath -m -- "$APP_ROOT")"
     [[ "$canonical_root" == "/var/www/mamo-ut" ]] \
         || fail "APP_ROOT resolves to unexpected path '$canonical_root'."
     [[ -f "$DEPLOY_MARKER" && ! -L "$DEPLOY_MARKER" ]] \
-        || fail "Missing trusted deploy marker $DEPLOY_MARKER. Follow docs/DEPLOYMENT_DEV.md."
+        || fail "Missing trusted deploy marker $DEPLOY_MARKER. Follow the matching DEV or production deployment runbook."
     marker_value="$(<"$DEPLOY_MARKER")"
-    [[ "$marker_value" == "mamo-ut-dev" ]] \
-        || fail "Invalid deploy marker in $DEPLOY_MARKER."
+    [[ "$marker_value" == "$EXPECTED_DEPLOY_MARKER" ]] \
+        || fail "Invalid deploy marker in $DEPLOY_MARKER; expected $EXPECTED_DEPLOY_MARKER."
     [[ -n "$HEALTHCHECK_URL" ]] \
-        || fail "HEALTHCHECK_URL is required (for example http://127.0.0.1/health)."
+        || fail "HEALTHCHECK_URL is required (for example http://127.0.0.1/up)."
     [[ "$KEEP_RELEASES" =~ ^[0-9]+$ ]] \
         || fail "KEEP_RELEASES must be an integer."
     ((KEEP_RELEASES >= 2 && KEEP_RELEASES <= 50)) \
@@ -74,7 +78,7 @@ prepare_layout() {
 acquire_lock() {
     require_command flock
     exec 9>"$LOCK_FILE"
-    flock -n 9 || fail "Another development deployment is already running."
+    flock -n 9 || fail "Another deployment for this environment is already running."
 }
 
 atomic_switch() {
@@ -221,7 +225,7 @@ deploy_release() {
         node -e '
             const manifest = require("./package.json");
             if (!manifest.scripts || typeof manifest.scripts.build !== "string" || !manifest.scripts.build.trim()) {
-                console.error("[deploy-dev] ERROR: package.json must define a non-empty build script.");
+                console.error("[deploy] ERROR: package.json must define a non-empty build script.");
                 process.exit(1);
             }
         '

@@ -1,0 +1,4 @@
+<x-layouts.storefront title="Câu chuyện O Út – Đặc sản Huế" page="about">
+    <section class="page-hero"><div class="container"><span class="eyebrow">Câu chuyện thương hiệu</span><h1>Món ngon xứ Huế làm từ cái tâm của người nhà</h1><p>O Út mang những món quen của bữa cơm Huế đến gần hơn bằng thông tin rõ ràng và cách đặt hàng dễ dùng.</p></div></section>
+    <section class="section"><div class="container story-grid"><article class="story-copy"><h2 class="section-heading">Không làm mọi thứ thật nhiều. Làm từng mẻ cho thật tử tế.</h2><p>Nội dung này cần được thay bằng câu chuyện thật của người sáng lập, nguồn nguyên liệu và quy trình sản xuất đã xác nhận.</p></article><div class="story-media"><img src="{{ asset('assets/images/story-ouut.jpg') }}" alt="Câu chuyện O Út"></div></div></section>
+</x-layouts.storefront>

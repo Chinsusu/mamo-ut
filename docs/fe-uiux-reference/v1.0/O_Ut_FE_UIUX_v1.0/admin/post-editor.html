@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Biên tập bài viết – O Út Admin</title>
+<meta name="description" content="Viết và xuất bản bài blog.">
+<meta name="theme-color" content="#5B1F2E">
+<meta property="og:title" content="Biên tập bài viết – O Út Admin">
+<meta property="og:description" content="Viết và xuất bản bài blog.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="../assets/images/hero-ouut.jpg">
+<link rel="icon" href="../assets/images/logo-mark.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/storefront.css"><link rel="stylesheet" href="../assets/css/admin.css">
+
+</head>
+<body class="admin-body" data-root="../" data-admin-page="post-editor">
+<div class="admin-shell">
+  <div data-admin-sidebar-slot></div>
+  <main class="admin-main">
+    <div data-admin-topbar-slot></div>
+    <div class="admin-content"><div class="admin-page-header"><div><h1 data-post-editor-title>Viết bài mới</h1><p>Editor, preview và SEO fields trong một luồng ngắn.</p></div><div class="admin-actions"><a class="btn btn--ghost" href="posts.html">Hủy</a></div></div><form data-post-editor-form><div class="admin-form-layout"><div><div class="admin-form-card"><div class="admin-form-card__body"><div class="admin-form-grid"><div class="admin-field admin-field--full"><label>Tiêu đề</label><input class="admin-control" name="title"></div><div class="admin-field"><label>Slug</label><input class="admin-control" name="slug"></div><div class="admin-field"><label>Chủ đề</label><select class="admin-control" name="category"><option>Cách dùng</option><option>Bảo quản</option><option>Công thức</option><option>Chuyện món Huế</option></select></div><div class="admin-field admin-field--full"><label>Đoạn giới thiệu</label><textarea class="admin-control" name="excerpt"></textarea></div></div><div style="margin-top:16px"><div class="editor-toolbar"><button type="button" data-editor-command="bold"><b>B</b></button><button type="button" data-editor-command="italic"><i>I</i></button><button type="button" data-editor-command="formatBlock">H2</button><button type="button" data-editor-command="insertUnorderedList">•</button></div><div class="editor-area" contenteditable="true" data-editor-area></div></div></div></div></div><aside><div class="admin-form-card"><div class="admin-form-card__header"><h2>Xuất bản</h2></div><div class="admin-form-card__body"><div class="admin-field"><label>Ngày xuất bản</label><input class="admin-control" name="publishedAt" type="date"></div><div class="admin-field" style="margin-top:12px"><label>Thời lượng đọc</label><input class="admin-control" name="readTime"></div><label style="display:block;margin-top:14px;font-size:12px;font-weight:800"><input type="checkbox" name="status"> Xuất bản ngay</label></div></div><div class="admin-form-card"><div class="admin-form-card__header"><h2>Ảnh cover</h2></div><div class="admin-form-card__body"><div class="image-preview" style="aspect-ratio:16/9"><img data-post-cover src="../assets/images/blog-1.jpg" alt=""></div><button class="btn btn--secondary btn--block btn--sm" type="button" style="margin-top:10px" onclick="window.OUtUI.toast('Prototype mô phỏng chọn ảnh cover.')">Đổi ảnh</button></div></div><div class="admin-form-card"><div class="admin-form-card__header"><h2>SEO preview</h2></div><div class="admin-form-card__body"><strong style="color:#1a0dab;font-size:13px">Tiêu đề bài viết – O Út</strong><span class="text-success small" style="display:block">https://ouut.vn/blog/slug</span><p class="small muted">Mô tả lấy từ đoạn giới thiệu nếu không nhập riêng.</p></div></div></aside></div><div class="sticky-actions"><span class="small muted">Cảnh báo đổi slug sẽ cần redirect 301 trong backend thật.</span><button class="btn btn--primary" type="submit"><svg class="icon"><use href="../assets/icons/icons.svg#save"></use></svg> Lưu bài viết</button></div></form></div>
+  </main>
+</div>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/components.js"></script>
+<script src="../assets/js/admin.js"></script>
+</body></html>

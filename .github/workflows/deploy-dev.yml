@@ -75,6 +75,7 @@ jobs:
       url: ${{ vars.DEV_PUBLIC_URL }}
     env:
       APP_ROOT: ${{ vars.DEV_APP_ROOT }}
+      DEPLOY_CONTEXT: dev
       DEPLOY_SHA: ${{ github.event.workflow_run.head_sha }}
       HEALTHCHECK_URL: ${{ vars.DEV_HEALTHCHECK_URL }}
       KEEP_RELEASES: ${{ vars.DEV_KEEP_RELEASES }}
