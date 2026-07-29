@@ -129,6 +129,14 @@ rollback_after_failed_switch() {
     fi
 }
 
+publish_runtime_permissions() {
+    local release_dir="$1"
+
+    chgrp -R www-data "$release_dir"
+    chmod -R g+rX "$release_dir"
+    find "$release_dir" -type d -exec chmod g+s {} +
+}
+
 prune_old_releases() {
     local current_release
     local candidate
@@ -170,6 +178,7 @@ deploy_release() {
     local previous_release=""
 
     require_command composer
+    require_command chgrp
     require_command git
     require_command npm
     require_command php
@@ -241,6 +250,7 @@ deploy_release() {
     )
 
     printf '%s\n' "$sha" > "$release_dir/REVISION"
+    publish_runtime_permissions "$release_dir"
 
     log "Switching current to $release_id."
     atomic_switch "$release_dir"
