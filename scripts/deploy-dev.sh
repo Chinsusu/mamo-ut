@@ -18,6 +18,8 @@ readonly KEEP_RELEASES="${KEEP_RELEASES:-5}"
 readonly RELOAD_SERVICES="${RELOAD_SERVICES:-false}"
 readonly ACTION="${1:-deploy}"
 
+cd "$SOURCE_ROOT"
+
 log() {
     printf '[deploy-%s] %s\n' "$DEPLOY_CONTEXT" "$*"
 }
