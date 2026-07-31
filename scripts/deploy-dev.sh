@@ -15,7 +15,6 @@ readonly LOCK_FILE="$APP_ROOT/.deploy.lock"
 readonly DEPLOY_MARKER="$APP_ROOT/.mamo-ut-deploy-root"
 readonly HEALTHCHECK_URL="${HEALTHCHECK_URL:-}"
 readonly KEEP_RELEASES="${KEEP_RELEASES:-5}"
-readonly RELOAD_SERVICES="${RELOAD_SERVICES:-false}"
 readonly ACTION="${1:-deploy}"
 
 cd "$SOURCE_ROOT"
@@ -57,8 +56,6 @@ validate_configuration() {
         || fail "KEEP_RELEASES must be an integer."
     ((KEEP_RELEASES >= 2 && KEEP_RELEASES <= 50)) \
         || fail "KEEP_RELEASES must be between 2 and 50."
-    [[ "$RELOAD_SERVICES" == "true" || "$RELOAD_SERVICES" == "false" ]] \
-        || fail "RELOAD_SERVICES must be 'true' or 'false'."
 }
 
 prepare_layout() {
@@ -92,19 +89,44 @@ atomic_switch() {
     mv -Tf "$temporary_link" "$CURRENT_LINK"
 }
 
-restart_runtime() {
-    php "$CURRENT_LINK/artisan" queue:restart
+restart_supervisor_workers() {
+    local worker_group='mamo-ut-worker:*'
+    local status_output
+    local status_code=0
 
-    if [[ "$RELOAD_SERVICES" == "true" ]]; then
-        require_command sudo
-        sudo -n systemctl reload php8.3-fpm
-        sudo -n systemctl reload nginx
-        sudo -n supervisorctl restart 'mamo-ut-worker:*'
+    if ! command -v supervisorctl >/dev/null 2>&1; then
+        log "Supervisor is not installed; skipping optional worker restart."
+        return
     fi
+
+    status_output="$(sudo -n supervisorctl status "$worker_group" 2>&1)" \
+        || status_code=$?
+
+    if [[ "$status_output" == *"ERROR (no such group)"* \
+        || "$status_output" == *"ERROR (no such process)"* ]]; then
+        log "Supervisor group $worker_group is not configured; skipping optional worker restart."
+        return
+    fi
+
+    if [[ "$status_output" != mamo-ut-worker:* \
+        && "$status_output" != *$'\n'mamo-ut-worker:* ]]; then
+        printf '%s\n' "$status_output" >&2
+        printf '[deploy-%s] ERROR: Could not determine Supervisor worker status (exit %s).\n' \
+            "$DEPLOY_CONTEXT" "$status_code" >&2
+        return 1
+    fi
+
+    sudo -n supervisorctl restart "$worker_group"
+}
+
+restart_runtime() {
+    php "$CURRENT_LINK/artisan" queue:restart || return 1
+    sudo -n systemctl reload php8.3-fpm || return 1
+    sudo -n systemctl reload nginx || return 1
+    restart_supervisor_workers
 }
 
 health_check() {
-    require_command curl
     curl \
         --fail \
         --silent \
@@ -121,13 +143,15 @@ rollback_after_failed_switch() {
     local previous_release="$1"
 
     if [[ -n "$previous_release" && -d "$previous_release" ]]; then
-        log "Health check failed; switching back to $previous_release."
+        log "Post-switch checks failed; switching back to $previous_release."
         atomic_switch "$previous_release"
-        restart_runtime || true
-        health_check || true
+        restart_runtime \
+            || fail "Previous release symlink was restored, but its runtime reload failed."
+        health_check \
+            || fail "Previous release and runtime were restored, but its health check failed."
+        log "Previous release was restored and is healthy."
     else
-        log "Health check failed on the first deployment; removing the failed current link."
-        unlink "$CURRENT_LINK"
+        fail "Post-switch checks failed and no previous release is available; leaving $CURRENT_LINK in place to avoid guaranteed downtime."
     fi
 }
 
@@ -181,10 +205,13 @@ deploy_release() {
 
     require_command composer
     require_command chgrp
+    require_command curl
     require_command git
     require_command npm
     require_command php
     require_command rsync
+    require_command sudo
+    require_command systemctl
 
     [[ -f "$SOURCE_ROOT/composer.json" && -f "$SOURCE_ROOT/composer.lock" ]] \
         || fail "Deployment requires composer.json and composer.lock."
@@ -273,7 +300,10 @@ rollback_release() {
     local candidate
     local releases=()
 
+    require_command curl
     require_command php
+    require_command sudo
+    require_command systemctl
 
     [[ -L "$CURRENT_LINK" ]] \
         || fail "Cannot roll back because $CURRENT_LINK is not a symbolic link."
@@ -302,9 +332,13 @@ rollback_release() {
     log "Rolling back from $current_release to $target_release."
     atomic_switch "$target_release"
     if ! restart_runtime || ! health_check; then
+        log "Rollback target failed its post-switch checks; restoring $current_release."
         atomic_switch "$current_release"
-        restart_runtime || true
-        fail "Rollback target was unhealthy; the original release was restored."
+        restart_runtime \
+            || fail "Original release symlink was restored, but its runtime reload failed."
+        health_check \
+            || fail "Original release and runtime were restored, but its health check failed."
+        fail "Rollback target was unhealthy; the original release was restored and is healthy."
     fi
 
     log "Rollback completed. Database migrations were not reversed."
